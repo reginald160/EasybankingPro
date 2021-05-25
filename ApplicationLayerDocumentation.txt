@@ -1,0 +1,4 @@
+The Services are implemented using CQRS method using the following Nuget pages 
+=== MediatR.Extensions.Microsoft.DependencyInjection
+=== MediatR
+=== AutoMapper
