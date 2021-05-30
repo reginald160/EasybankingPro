@@ -9,8 +9,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-	public class Account : BaseProfile
+	public class Account : AdminModel
 	{
+		public Account()
+		{
+			Transactions = new HashSet<TransactionLog>();
+
+		}
 		public string AccountNumber { get; set; }
 
 		public Guid? CustomerId { get; set; }
@@ -22,8 +27,10 @@ namespace Domain.Entities
 		[ForeignKey("AccountTypeId")]
 		[JsonIgnore]
 		public AccountType AccountType { get; set; }
+		public string UserName { get; set; }
 		public byte[] PINHash { get; set; }
 		public byte [] PINSalt { get; set; }
+		public ICollection<TransactionLog> Transactions { get; set; }
 		
 	}
 }

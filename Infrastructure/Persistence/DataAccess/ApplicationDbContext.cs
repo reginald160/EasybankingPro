@@ -1,4 +1,4 @@
-﻿using Infrastructure.Identity;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace Infrastructure.Persistence.DataAccess
 		{
 			builder.ApplyConfiguration(new TransactionTypeConfig());
 			builder.ApplyConfiguration(new DesignitionConfig());
-
+			#region
 			//var typesToRegister = Assembly.Load("BillsPmtOrchestrator.Repository").GetTypes().
 			// Where(type => !string.IsNullOrEmpty(type.Namespace)).
 			// Where(type => type.GetInterface(typeof(IEntityTypeConfiguration<>).FullName) != null).ToList();
@@ -38,9 +38,10 @@ namespace Infrastructure.Persistence.DataAccess
 			//foreach (var type in typesToRegister)
 			//{
 			//	dynamic configurationInstance = Activator.CreateInstance(type);
-   //             builder.ApplyConfiguration(configurationInstance);
+			//             builder.ApplyConfiguration(configurationInstance);
 
 			//}
+			#endregion
 
 
 
@@ -50,7 +51,7 @@ namespace Infrastructure.Persistence.DataAccess
 		public DbSet<BaseProfile> BaseProfiles { get; set; }
 		public DbSet<Employee> Employees { get; set; }
 		public DbSet<Account> Accounts { get; set; }
-		public DbSet<Transaction> Transactions { get; set; }
+		public DbSet<TransactionLog> Transactions { get; set; }
 		public DbSet<TransactionType> TransactionTypes { get; set; }
 		public DbSet<Designition> Designitions { get; set; }
 		public DbSet<NumberSequence> NumberSequences { get; set; }

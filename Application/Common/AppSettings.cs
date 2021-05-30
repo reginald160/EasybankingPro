@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Core.Models
+namespace Application.Common
 {
-	class Employee
+	public class AppSettings
 	{
+		public string BankSettlement { get; set; }
 	}
 }

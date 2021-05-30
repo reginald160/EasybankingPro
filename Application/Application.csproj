@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Interfaces\" />
-    <Folder Include="Core\CQRS\AccountCQRS\Querry\" />
-    <Folder Include="Core\CQRS\Queries\Account\" />
     <Folder Include="Core\DTOs\TransactionTypeDTOs\" />
     <Folder Include="Core\Exceptions\" />
     <Folder Include="Core\Behaviour\" />

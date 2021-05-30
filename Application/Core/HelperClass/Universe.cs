@@ -11,7 +11,7 @@ namespace Application.Core.HelperClass
 		public const string FirstUser = "Employee";
 		public const string SecondUser = "Customer";
 		public const string EmployeeNumenclature = "Emp";
-		public static bool Deleted = true;
+		public static bool ISDeleted = true;
 		public const string ColorGrey = "#808080";
 		public const string ButtonRed = "btn-danger";
 		public const string ButtonTheme = "btn-theme";
@@ -45,5 +45,12 @@ namespace Application.Core.HelperClass
 			}
 		}
 
+		public static DateTime Now
+		{
+			get
+			{
+				return DateTime.UtcNow;
+			}
+		}
 	}
 }

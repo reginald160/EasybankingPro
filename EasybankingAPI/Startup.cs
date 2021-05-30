@@ -1,3 +1,4 @@
+using Application;
 using Application.Core.HelperClass;
 using Infrastructure;
 using Infrastructure.Persistence.DataAccess;
@@ -36,6 +37,7 @@ namespace EasybankingAPI
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasybankingAPI", Version = "v1" });
 			});
 			ApplicationContainer.ApplicationInjectionServices(services, Configuration);
+			services.AddAutoMapper(typeof(Startup).Assembly);
 
 
 		}

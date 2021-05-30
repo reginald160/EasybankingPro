@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Application.Core.Mappings
 {
-	public class IMappingProfile : Profile
+	public class MappingProfile : Profile
 	{
-		public IMappingProfile()
+		public MappingProfile()
 		{
 			ApplyMappingFromAssembly(Assembly.GetExecutingAssembly());
 		}

@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using static Domain.Enums;
 
 namespace Domain.Entities
 {
-	public class AccountType : BaseModel
+	public class AccountType : BaseModel, IChangeNotification
 	{
 		public AccountType()
 		{

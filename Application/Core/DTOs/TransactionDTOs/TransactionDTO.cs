@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using static Domain.Enums;
-using Transaction = Domain.Entities.Transaction;
+using TransactionLog = Domain.Entities.TransactionLog;
 
 namespace Application.Core.DTOs.TransactionDTOs
 {
-	public class TransactionDTO :  IMapFrom<Transaction>, IRequest
+	public class TransactionDTO :  IMapFrom<TransactionLog>, IRequest
 	{
 		public TransactionDTO()
 		{

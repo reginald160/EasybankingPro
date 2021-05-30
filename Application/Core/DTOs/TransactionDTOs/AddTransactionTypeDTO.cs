@@ -12,7 +12,7 @@ using static Domain.Enums;
 
 namespace Application.Core.DTOs.TransactionDTOs
 {
-	public class AddTransactionTypeDTO : BaseDTO, IRequest,  IMapFrom<TransactionType>
+	public class AddTransactionTypeDTO : BaseDTO /*IRequest,  IMapFrom<TransactionType>*/
 	{
 		[Required]
 		public string Title { get; set; }

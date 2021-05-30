@@ -23,6 +23,11 @@ namespace Domain
             Successful, Failed, Pending
         }
 
+        public enum TransactionTypes
+        {
+            Deposit, Withdrawal, Transfer
+        }
+
         public enum TransactionTypeDescription
         {
             Deposit, Withdrawal, Transfer

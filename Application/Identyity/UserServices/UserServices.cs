@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Identity
+namespace Application.Identyity.UserServices
 {
 	public class UserServices : IUserServices
 	{
@@ -24,7 +24,7 @@ namespace Infrastructure.Identity
 		{
 			var account = _db.Accounts.Where(x => x.AccountNumber.Equals(accountNumber)).SingleOrDefault();
 			if (account == null) return null;
-						
+
 			//Verify Pin Hash
 			if (!(IdentityLogicHelper.VerifyPinHash(pin, account.PINHash, account.PINSalt))) return null;
 
@@ -45,7 +45,7 @@ namespace Infrastructure.Identity
 			using (var hmac = new System.Security.Cryptography.HMACSHA512())
 			{
 				pinSalt = hmac.Key;
-				pinHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pin));		
+				pinHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pin));
 			}
 
 			account.PINSalt = pinSalt;
@@ -55,7 +55,7 @@ namespace Infrastructure.Identity
 			_db.SaveChanges();
 
 			return account;
-			
+
 		}
 	}
 }

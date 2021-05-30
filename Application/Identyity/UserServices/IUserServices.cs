@@ -5,15 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Identity
+namespace Application.Identyity.UserServices
 {
 	public interface IUserServices
 	{
-		//bool VerifyPin(string pin, byte[] pinHash, byte[] pinSalt);
 		Account AuthenticateAccount(string accountNumber, string pin);
 
 		Account CreatPin(Account account, string pin, string confirmPin);
-
-
 	}
 }

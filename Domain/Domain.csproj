@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Attributes\" />
+    <Compile Remove="Common\ApplicationRole.cs" />
+    <Compile Remove="Common\ApplicationUser.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <Folder Include="Attributes\" />
   </ItemGroup>
 
 </Project>

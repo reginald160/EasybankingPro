@@ -1,4 +1,4 @@
-﻿using Infrastructure.Identity;
+﻿
 using Infrastructure.Persistence.DataAccess;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +29,7 @@ namespace Infrastructure
 			//	options.Stores.MaxLengthForKeys = 128;
 			//	options.SignIn.RequireConfirmedAccount = true;
 			//});
-			services.AddTransient<IUserServices, UserServices>();
+			//services.AddTransient<IUserServices, UserServices>();
 			return services;
 		}
 

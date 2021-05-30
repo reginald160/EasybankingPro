@@ -25,5 +25,6 @@ namespace Domain.Entities
 		public virtual Account Account { get; set; }
 
 
+
 	}
 }

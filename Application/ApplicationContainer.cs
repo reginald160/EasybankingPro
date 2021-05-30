@@ -10,8 +10,9 @@ using Application.Core.Mappings;
 using MediatR;
 using Infrastructure;
 using Microsoft.Extensions.Configuration;
+using Application.Identyity.UserServices;
 
-namespace Application.Core.HelperClass
+namespace Application
 {
 	public static class ApplicationContainer
 	{
@@ -20,11 +21,11 @@ namespace Application.Core.HelperClass
 			
 
 			services.AddAutoMapper(Assembly.GetExecutingAssembly());
-			services.AddAutoMapper(typeof(IMappingProfile));
+			services.AddAutoMapper(typeof(AccountMap));
 			services.AddMediatR(typeof(ApplicationContainer));
 			services.AddMediatR(Assembly.GetExecutingAssembly());
+			services.AddScoped<IUserServices, UserServices>();
 			InfrastructureContainer.InfrastructureInjectionServices(services, configuration);
-
 
 			return services;
 		}
