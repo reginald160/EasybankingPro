@@ -22,6 +22,15 @@ namespace Domain
         {
             Successful, Failed, Pending
         }
+        public enum RequestStatus
+        {
+            Successful, Failed, Pending
+        }
+
+        public enum UserDescriminator
+        {
+            Customer, Employee
+        }
 
         public enum TransactionTypes
         {

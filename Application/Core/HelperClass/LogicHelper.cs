@@ -35,6 +35,9 @@ namespace Application.Core.HelperClass
 			return DateTime.Now.Year.ToString() + year + day + DateTime.Now.ToString("ddmmyyhhmmss");
 		}
 
+		
+
+
 		public static string GetRequestId()
 		{
 			return $"{Guid.NewGuid().ToString()}";

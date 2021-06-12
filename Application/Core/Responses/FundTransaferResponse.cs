@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Common
+namespace Application.Core.Responses
 {
-	public class TransactionResponse 
+	public class FundTransaferResponse 
 	{
 		public string SourceAccount { get; set; }
 		public decimal Amount { get; set; }

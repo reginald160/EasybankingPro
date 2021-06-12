@@ -11,9 +11,7 @@ namespace Application.Core.Mappings
 {
 	public class TransactionMap : Profile
 	{
-		public TransactionMap()
-		{
-			CreateMap<AccountType, AddTransactionTypeDTO>().ReverseMap();
-		}
+		public TransactionMap() => CreateMap<AccountType, AddTransactionTypeDTO>().ReverseMap();
+
 	}
 }

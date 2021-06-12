@@ -9,10 +9,7 @@ namespace Application.Core.DTOs.EmployeeDTO
 {
 	public class CreateEmployeeDTO : BaseProfileDTO
 	{
-		public CreateEmployeeDTO()
-		{
-			Deleted = false;
-		}
+		
 		public string StaffCode { get; set; }
 	}
 }

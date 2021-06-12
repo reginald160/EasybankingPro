@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace Application.Common
 {
-	public class Response
+	public class ResponseBody
 	{
+		
 		public string Requestid => LogicHelper.GetTransactionId();
 		public int ResponseCode { get; set; }
 		public string ResponseMessage { get; set; }
+		public string Status { get; set; }
 		public object Data { get; set; }
+
+
+		
 	}
 }

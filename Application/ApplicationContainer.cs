@@ -11,6 +11,9 @@ using MediatR;
 using Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Application.Identyity.UserServices;
+using Application.Core.Behaviour;
+using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application
 {
@@ -18,13 +21,14 @@ namespace Application
 	{
 		public static IServiceCollection ApplicationInjectionServices(this  IServiceCollection services, IConfiguration configuration)
 		{
-			
 
+			services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 			services.AddAutoMapper(Assembly.GetExecutingAssembly());
 			services.AddAutoMapper(typeof(AccountMap));
 			services.AddMediatR(typeof(ApplicationContainer));
 			services.AddMediatR(Assembly.GetExecutingAssembly());
 			services.AddScoped<IUserServices, UserServices>();
+
 			InfrastructureContainer.InfrastructureInjectionServices(services, configuration);
 
 			return services;

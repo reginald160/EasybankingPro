@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Application.Core.HelperClass;
+using Application.Core.Responses;
 using Domain.Entities;
 using Infrastructure.Persistence.DataAccess;
 using MediatR;
@@ -38,33 +39,24 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 
 			protected override Response Handle(Command request)
 			{
-				Response response = new Response();
-				TransactionResponse transactionResponse = new TransactionResponse()
+				WithdrawalDepositRespponse transactionResponse = new WithdrawalDepositRespponse()
 				{
-					SourceAccount = request.AccountNumber,
+					AccountNumber = request.AccountNumber,
 					Amount = request.Amount,
 					TransactionType = "Deposit",
 				};
 				try
 				{
 					if (request.Amount < 100)
-					{
-						response.ResponseCode = ResponseCode.InvalidDepositAmount;
-						response.ResponseMessage = ResponseMessage.InvalidDepositAmount;
-						response.Data = null;
-						return response;
-					}
+						return CoreResponse.GlobalResponse(null, ResponseMessage.InvalidDepositAmount, ResponseStatus.Failed, ResponseCode.InvalidDepositAmount);
+
 
 					var account = _db.Accounts.Where(x => x.AccountNumber.Equals(request.AccountNumber)).FirstOrDefault();
 
 					if (account == null)
-					{
-						response.ResponseCode = ResponseCode.AccountNumberNotFound;
-						response.ResponseMessage = ResponseMessage.AccountNumberNotFound;
-						response.Data = null;
-						return response;
-					}
-					
+						return CoreResponse.NotFoundResponse(transactionResponse, ResponseMessage.AccountNumberNotFound);
+
+
 					var transactionType = _db.TransactionTypes.Where(x => x.Description == TransactionTypeDescription.Deposit).FirstOrDefault();
 					decimal transactionCharge = transactionType.Charge;
 					decimal totalAmount = request.Amount - transactionCharge;
@@ -81,7 +73,7 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 
 					};
 					_db.Accounts.Update(account);
-					bool IsCompleted = _db.SaveChanges() > 1;
+					bool IsCompleted = _db.SaveChanges() > 0;
 					if(IsCompleted)
 					{
 						transactionLog.Status = TransStatus.Successful;
@@ -89,31 +81,24 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 						_db.Transactions.Add(transactionLog);
 						_db.SaveChanges();
 						transactionResponse.AccountBalance = account.CurrentAccountBalance;
-						response.ResponseCode = ResponseCode.TransactionSuccess;
-						response.ResponseMessage = ResponseMessage.TransactionSuccessMessage;
-						response.Data = transactionResponse;
+						transactionLog.SourceAccountNumber = account.AccountNumber;
+
+						return CoreResponse.OnSuccess(transactionResponse);
 					}
 
 					transactionLog.Status = TransStatus.Failed;
 					transactionLog.StatusMessage = "Failed Transanction";
+					transactionLog.SourceAccountNumber = account.AccountNumber;
 					_db.Transactions.Add(transactionLog);
 					_db.SaveChanges();
 					transactionResponse.AccountBalance = account.CurrentAccountBalance;
-					response.ResponseCode = ResponseCode.TransactionSuccess;
-					response.ResponseMessage = ResponseMessage.TransactionSuccessMessage;
-					response.Data = transactionResponse;
-
-					return response;
+					return CoreResponse.OnFailureResponse(transactionResponse, "Failed Transaction");
 				}
 
 				catch(Exception exp)
 				{
-					_logger.LogError($"AN ERROR OCCOURED....{exp.Message}");
+					return CoreResponse.OnFailureResponse(transactionResponse, exp.Message);
 				}
-
-				return response;
-
-
 
 			}
 		}

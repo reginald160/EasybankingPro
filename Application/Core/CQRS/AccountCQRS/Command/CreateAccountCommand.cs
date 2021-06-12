@@ -2,16 +2,22 @@
 using Application.Core.HelperClass;
 using Application.Core.Responses;
 using Application.Core.ViewModels.AccountViewModel;
+using Application.Identyity.UserServices;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Persistence;
 using Infrastructure.Persistence.DataAccess;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static Domain.Enums;
 
 namespace Application.Core.CQRS.AccountCQRS.Command
 {
@@ -22,50 +28,55 @@ namespace Application.Core.CQRS.AccountCQRS.Command
 			public CreateAccountDTO Account { get; set; }
 		}
 
-        public class Handler : RequestHandler<Command, Response>
+        public class Handler : IRequestHandler<Command, Response>
         {
             private readonly ApplicationDbContext _db;
             private readonly IMapper _mapper;
             private readonly ILogger<Handler> _logger;
-			public string Message { get; set; }
+            private readonly IUserServices _userServices;
+            AccountResponse accountResponse = new AccountResponse();
 
-			public Handler(ApplicationDbContext db, IMapper mapper, ILogger<Handler> logger)
+			public Handler(ApplicationDbContext db, IMapper mapper, ILogger<Handler> logger, UserManager<ApplicationUser> userManager, IUserServices userServices = null)
 			{
 				_db = db;
 				_mapper = mapper;
 				_logger = logger;
+				_userServices = userServices;
 			}
 
-			protected override Response Handle(Command request)
-            {
-                Response response = new Response();
-                AccountResponse accountResponse = new AccountResponse();
+			public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
+			{
 
+                
                 try
                 {
-                   
-                     var record = _mapper.Map<Account>(request.Account);
+                    var record = _mapper.Map<Account>(request.Account);
                     _db.Accounts.Add(record);
-                    _db.SaveChanges();
-                    response.ResponseCode = ResponseCode.SuccesFullOperation;
-                    response.ResponseMessage = ResponseMessage.SuccesFullOperationMessage;
-                    accountResponse.AccountName = request.Account.AccountNumber;
-                    response.Data = accountResponse;
+                     var user = new ApplicationUser
+                    {
+                        UserName = request.Account.Email,
+                        Email = request.Account.Email,
+                        //Descriminator = UserDescriminator.Customer
+                    };
+                    await _userServices.Creatidentityuser(user, "EasyBanking160@");
 
-                    return response;
+                    _db.SaveChanges();
+                   
+                    
+                    accountResponse.AccountNumber = record.FullName;
+                    accountResponse.AccountName = record.AccountNumber;
+
+                    return CoreResponse.OnSaveResponse(accountResponse);
                 }
                 catch (Exception exp)
                 {
-                    //_logger.LogError($"AN ERROR OCCOURED....{exp.Message}");
-                    Message = exp.Message;
-                    response.ResponseCode = ResponseCode.FailedOperation;
-                    response.ResponseMessage = exp.Message;
+                    return CoreResponse.OnFailureResponse(accountResponse, exp.Message);
 
-                    return response;
                 }
 
-                
             }
+
+          
         }
     }
 }

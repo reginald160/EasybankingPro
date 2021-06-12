@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static Domain.Enums;
 
@@ -24,7 +25,7 @@ namespace Domain.Entities
 		public string AccountCode { get; set; }
 		
 		public AccountTypeDescription AccountTypeDescription { get; set; }
-
+		[JsonIgnore]
 		public ICollection<Account> Accounts { get; set; }
 		public decimal InterestRateId { get; set; }
 		

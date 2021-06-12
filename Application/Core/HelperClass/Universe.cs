@@ -31,6 +31,8 @@ namespace Application.Core.HelperClass
 		public static string Error500 = "Something Went Wrong";
 		public static string APIBaseUrl = "https://localhost:44327";
 		public static string UserScetionSeed = "Username";
+		public static string SuccessStatus = "Success";
+		public static string FailedStatus = "Failed";
 		public static string AdminPass
 		{
 			get

@@ -15,7 +15,13 @@ namespace Application.Core.Mappings
 	
 		public EmployeeMap()
 		{
-			CreateMap<Employee, CreateEmployeeDTO>().ReverseMap();
+			//Create Employee MAp
+			CreateMap<Employee, CreateEmployeeDTO>().ReverseMap()
+				.ForMember(x=> x.Id, o=> o.Ignore())
+				.ForMember(x=> x.Deleted, o=> o.MapFrom(e=> false))
+				.ForMember(x=> x.FullName, o=> o.MapFrom(e=> e.FirstName + " " + e.MiddleName + " " + e.LastName));
+
+			//GetAll Employee mapping
 			CreateMap<Employee, GetAllEmployeeDTO>().ReverseMap();
 				
 		}

@@ -30,6 +30,7 @@ namespace Infrastructure.Persistence.DataAccess
 		{
 			builder.ApplyConfiguration(new TransactionTypeConfig());
 			builder.ApplyConfiguration(new DesignitionConfig());
+			builder.ApplyConfiguration(new AccountTypeConfig());
 			#region
 			//var typesToRegister = Assembly.Load("BillsPmtOrchestrator.Repository").GetTypes().
 			// Where(type => !string.IsNullOrEmpty(type.Namespace)).
@@ -43,14 +44,14 @@ namespace Infrastructure.Persistence.DataAccess
 			//}
 			#endregion
 
-
-
 			base.OnModelCreating(builder);     
 		}
 
-		public DbSet<BaseProfile> BaseProfiles { get; set; }
+		//public DbSet<BaseProfile> BaseProfiles { get; set; }
 		public DbSet<Employee> Employees { get; set; }
+		//public DbSet<Customer> Customers { get; set; }
 		public DbSet<Account> Accounts { get; set; }
+		public DbSet<AccountType> AccountTypes { get; set; }
 		public DbSet<TransactionLog> Transactions { get; set; }
 		public DbSet<TransactionType> TransactionTypes { get; set; }
 		public DbSet<Designition> Designitions { get; set; }
@@ -111,7 +112,11 @@ namespace Infrastructure.Persistence.DataAccess
 			return SaveChangesAsync().GetAwaiter().GetResult();
 		}
 
-
+		//public void EventOccured(List<object> list, string value, string evt)
+		//{
+		//	var indexOfValue = list.FindIndex(val => val.GetType().GetProperty("Id").Name); ;
+		//	list[indexOfValue] = $"{list[indexOfValue]}, event: {evt}";
+		//}
 
 	}
 }

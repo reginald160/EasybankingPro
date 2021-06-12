@@ -17,15 +17,17 @@ namespace Application.Core.HelperClass
 		public static int TransactionSuccess = 008;
 		public static int LowDebitAmount = 009;
 		public static int InvalidWithdrawalAmount = 010;
-		public static int SuccesFullOperation = 011;
+		public static int SuccesFullOperation = 200;
 		public static int FailedOperation = 012;
-
-
-
-
+		public static int NotFound = 404;
 
 	}
 
+	public static class ResponseStatus
+	{
+		public static string Failed = Universe.FailedStatus;
+		public static string Success = Universe.SuccessStatus;
+	}
 	public static class ResponseMessage
 	{
 		public static string AccountNumberNotFound = "Invalid Account Number";
@@ -38,8 +40,9 @@ namespace Application.Core.HelperClass
 		public static string LowDebitAmountMessage = "The Amount to be withdrwal can not be greater than current balance";
 		public static string InvalidWithdrawalAmountMessage = "";
 		public static string SuccesFullOperationMessage = "Successful operation";
-
-
+		public static string FailedOperationMessage = "Failed operation";
+		public static string RecordOnCreationMessage = "Record has been created Successfuly";
+		public static string RecordOnUpdateMessage = "Record has been Updated Successfuly";
 
 
 	}

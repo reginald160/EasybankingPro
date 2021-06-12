@@ -1,8 +1,12 @@
 ﻿using Domain.Entities;
 using Infrastructure.HelperClass;
+using Infrastructure.Persistence;
 using Infrastructure.Persistence.DataAccess;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -14,12 +18,22 @@ namespace Application.Identyity.UserServices
 	{
 		public virtual ClaimsPrincipal User { get; }
 		private readonly ApplicationDbContext _db;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-		public UserServices(ApplicationDbContext db)
+		public UserServices(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
 		{
 			_db = db;
+			_userManager = userManager;
 		}
 
+
+		public async Task<ApplicationUser> Creatidentityuser(ApplicationUser user, string password)
+		{
+			var result = await _userManager.CreateAsync(user, password);
+			if (result.Succeeded)
+				return user;
+			return null;
+		}
 		public Account AuthenticateAccount(string accountNumber, string pin)
 		{
 			var account = _db.Accounts.Where(x => x.AccountNumber.Equals(accountNumber)).SingleOrDefault();
@@ -30,6 +44,18 @@ namespace Application.Identyity.UserServices
 
 			return account; // return account on login success
 		}
+		public async Task VerifyEmail(string email)
+		{
+			var user = await _userManager.FindByNameAsync(email);
+			await _userManager.DeleteAsync(user);
+		}
+
+		public async Task DeleteUser(string email)
+		{
+			var user = await _userManager.FindByNameAsync(email);
+			await _userManager.DeleteAsync(user);
+		}
+
 
 		public string GetUserId()
 		{
@@ -57,5 +83,12 @@ namespace Application.Identyity.UserServices
 			return account;
 
 		}
+
+		public IEnumerable<ApplicationUser> GetAllUsers()
+		{
+			throw new NotImplementedException();
+		}
+
+		
 	}
 }

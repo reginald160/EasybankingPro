@@ -1,7 +1,9 @@
 ﻿using Application.Core.CQRS.AccountCQRS.Command;
+using Application.Core.CQRS.TRansactionCQRS.Command;
 using Application.Core.CQRS.TRansactionCQRS.Querry;
 using Application.Core.CQRS.TRansactionCQRS.Query;
 using Application.Core.DTOs.TransactionDTOs;
+using Application.Core.HelperClass;
 using Application.Core.ViewModels.AccountViewModel;
 using AutoMapper;
 using Domain.Entities;
@@ -54,26 +56,12 @@ namespace EasybankingAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
 		//[Authorize]
-		public async Task<IActionResult> GetTransactionType(CancellationToken token)
+		public async Task<IActionResult> GetAllTransactionType()
 		{
-			var list = new List<AddTransactionTypeDTO>();
-			try
-			{
-
-				var request = await _mediator.Send(new AllTransactionType.Query());
-				return Ok(request);
-			}
-
-			catch (Exception ex) when (ex is TaskCanceledException || ex is OperationCanceledException)
-			{
-				return Ok(list);
-			}
-
-
-
+			var request = await _mediator.Send(new AllTransactionType.Query());
+			return request.Status.Equals(ResponseStatus.Success) ? Ok(request) : NotFound(request);
+			
 		}
-
-
 
 		[HttpPost("[action]")]
 		[ProducesResponseType(201, Type = typeof(TransactionDTO))]
@@ -93,7 +81,68 @@ namespace EasybankingAPI.Controllers
 			return BadRequest(ModelState);
 		}
 
+		[HttpPost("[action]")]
+		[ProducesResponseType(201, Type = typeof(DepositWithdrawalDTO))]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		[ProducesDefaultResponseType]
+		public async Task<IActionResult> Deposit([FromBody] DepositWithdrawalDTO request)
+		{
+			if (ModelState.IsValid)
+			{
+				var result = await _mediator.Send(new DepositCommand.Command {
+					AccountNumber = request.AccountNumber, 
+					Amount = request.Amount
+				});
 
+				return Ok(result);
+			}
+			return BadRequest(ModelState);
+		}
+
+		[HttpPost("[action]")]
+		[ProducesResponseType(201, Type = typeof(DepositWithdrawalDTO))]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		[ProducesDefaultResponseType]
+		public async Task<IActionResult> Withdrawal([FromBody] DepositWithdrawalDTO request)
+		{
+			if (ModelState.IsValid)
+			{
+				var result = await _mediator.Send(new WithdrawalCommand.Command
+				{
+					AccountNumber = request.AccountNumber,
+					Amount = request.Amount
+				});
+
+				return Ok(result);
+			}
+			return BadRequest(ModelState);
+		}
+
+		[HttpPost("[action]")]
+		[ProducesResponseType(201, Type = typeof(FundTransfarDTO))]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		[ProducesDefaultResponseType]
+		public async Task<IActionResult> CashTransafer([FromBody] FundTransfarDTO request)
+		{
+			if (ModelState.IsValid)
+			{
+				var result = await _mediator.Send(new FundTransaferCommand.Command
+				{
+					DestinationAccountNumber = request.DestinationAccount,
+					SourceAcoountNumber = request.SourceAccount,
+					Amount = request.Amount
+				});
+
+				return Ok(result);
+			}
+			return BadRequest(ModelState);
+		}
 
 	}
 }

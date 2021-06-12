@@ -1,5 +1,7 @@
 ﻿using Application.Common;
+using Application.Core.DTOs.TransactionTypeDTOs;
 using Application.Core.HelperClass;
+using Application.Core.Responses;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Infrastructure.Persistence.DataAccess;
@@ -32,30 +34,17 @@ namespace Application.Core.CQRS.TRansactionCQRS.Query
 				_mapper = mapper;
 			}
 
-			//protected override IQueryable<AccountIndexDTO> Handle(Query response, CancellationToken cancellationToken)
-			//{
-			//	var entity =  _db.Accounts.ToList();
-			//	if (entity.Equals(null)) return null;
-
-			//	IQueryable<Account> accounts = (IQueryable<Account>)entity; //Casting to IQuerable
-
-			//	var accountQuerable = _mapper.Map<IQueryable<AccountIndexDTO>>(accounts);
-
-			//	return accountQuerable;
-
-			//}
-
 			public async Task<Response> Handle(Query request, CancellationToken cancellationToken)
 			{
 
 				Response response = new Response();
 				try
 				{
-
 					var records = await _db.TransactionTypes.Where(x => x.Deleted.Equals(!Universe.ISDeleted))
-						.ProjectTo<AdminDTO>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
+						.ProjectTo<TransactionTypeDTO>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken);
 					response.ResponseCode = ResponseCode.SuccesFullOperation;
 					response.ResponseMessage = ResponseMessage.SuccesFullOperationMessage;
+					response.Status = ResponseStatus.Success;
 					response.Data = records;
 					return response;
 				}
@@ -63,6 +52,7 @@ namespace Application.Core.CQRS.TRansactionCQRS.Query
 				{
 					response.ResponseCode = ResponseCode.FailedOperation;
 					response.ResponseMessage = exp.Message;
+					response.Status = ResponseStatus.Failed;
 					response.Data = null;
 					return response;
 				}

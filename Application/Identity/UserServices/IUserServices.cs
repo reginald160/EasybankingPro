@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,10 @@ namespace Application.Identyity.UserServices
 		Account AuthenticateAccount(string accountNumber, string pin);
 
 		Account CreatPin(Account account, string pin, string confirmPin);
-	}
+
+		 IEnumerable<ApplicationUser> GetAllUsers();
+
+		 Task<ApplicationUser> Creatidentityuser(ApplicationUser user, string password);
+       
+    }
 }

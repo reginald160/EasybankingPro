@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-	public class Account : AdminModel
+	public class Account : BaseProfile
 	{
 		public Account()
 		{
@@ -17,15 +17,15 @@ namespace Domain.Entities
 
 		}
 		public string AccountNumber { get; set; }
+		public Guid? EmployeeId { get; set; }
 
-		public Guid? CustomerId { get; set; }
-		[ForeignKey("CustomerId")]
-		[JsonIgnore]
-		public Customer Customer { get; set; }
+		[ForeignKey("EmployeeId")]
+		public virtual Employee AccountOfficer { get; set; }
+
+		public string BrokerCode { get; set; }
 		public  decimal CurrentAccountBalance { get; set; }
 		public Guid? AccountTypeId { get; set; }
 		[ForeignKey("AccountTypeId")]
-		[JsonIgnore]
 		public AccountType AccountType { get; set; }
 		public string UserName { get; set; }
 		public byte[] PINHash { get; set; }

@@ -19,10 +19,10 @@ namespace Domain.Entities
 
 		public string BrokerCode { get; set; }
 
-		public Guid? Accountd { get; set; }
-		[ForeignKey("Accountd")]
+		//public Guid? Accountd { get; set; }
+		//[ForeignKey("Accountd")]
 
-		public virtual Account Account { get; set; }
+		//public virtual Account Account { get; set; }
 
 
 

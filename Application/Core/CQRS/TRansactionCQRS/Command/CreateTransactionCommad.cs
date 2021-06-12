@@ -1,6 +1,9 @@
 ﻿using Application.Common;
 using Application.Core.DTOs.TransactionDTOs;
+using Application.Core.HelperClass;
+using Application.Core.Responses;
 using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Persistence.DataAccess;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -9,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -22,7 +26,7 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 			public TransactionDTO Transaction  { get; set; }
 		}
 
-		public class Handler : RequestHandler<Command, Response>
+		public class Handler : IRequestHandler<Command, Response>
 		{
 			private readonly ApplicationDbContext _db;
 			private readonly IMapper _mapper;
@@ -39,28 +43,21 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 				_bankSettlement = _appSettings.BankSettlement;
 			}
 
-			protected override Response Handle(Command request)
+		
+			public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
 			{
-				Response response = new Response();
-				var transaction = _mapper.Map<Transaction>(request.Transaction);
-				//_db.Transactions.Add();
-				bool reponseType = _db.SaveChanges() > 1;
-				if(reponseType.Equals(true))
+				try
 				{
-					response.ResponseCode = 01;
-					response.ResponseMessage = "The transaction was successfuly";
-					response.Data = transaction;
-					return response;
+					var transaction = _mapper.Map<TransactionLog>(request.Transaction);
+					await _db.Transactions.AddAsync(transaction);
+					_db.SaveChanges();
+					return CoreResponse.GlobalResponse(transaction, "The transaction was successful", ResponseStatus.Success, ResponseCode.TransactionSuccess);
 				}
-				else
+				catch (Exception exp)
 				{
-					response.ResponseCode = 00;
-					response.ResponseMessage = "Transaction failed";
-					response.Data = null;
-					return response;
+					return CoreResponse.GlobalResponse(null, exp.Message, ResponseStatus.Failed, ResponseCode.TransactionFailure);
+
 				}
-				
-				
 			}
 		}
 	}

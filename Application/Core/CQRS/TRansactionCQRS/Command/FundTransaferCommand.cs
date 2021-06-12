@@ -1,9 +1,11 @@
 ﻿using Application.Common;
 using Application.Core.HelperClass;
+using Application.Core.Responses;
 using Domain.Entities;
 using Infrastructure.Persistence.DataAccess;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +39,7 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 			protected override Response Handle(Command request)
 			{
 				Response response = new Response();
-				TransactionResponse transactionResponse = new TransactionResponse()
+				FundTransaferResponse transactionResponse = new FundTransaferResponse()
 				{
 					SourceAccount = request.SourceAcoountNumber,
 					DestinationAccount = request.DestinationAccountNumber,
@@ -58,19 +60,11 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 					var destinationAccount = _db.Accounts.Where(x => x.AccountNumber.Equals(request.DestinationAccountNumber)).FirstOrDefault();
 
 					if (sourceAccount == null)
-					{
-						response.ResponseCode = ResponseCode.AccountNumberNotFound;
-						response.ResponseMessage = ResponseMessage.AccountNumberNotFound;
-						response.Data = sourceAccount;
-						return response;
-					}
+						return CoreResponse.NotFoundResponse(request.SourceAcoountNumber, ResponseMessage.AccountNumberNotFound);
+
 					if (destinationAccount == null)
-					{
-						response.ResponseCode = ResponseCode.AccountNumberNotFound;
-						response.ResponseMessage = ResponseMessage.AccountNumberNotFound;
-						response.Data = destinationAccount;
-						return response;
-					}
+						return CoreResponse.NotFoundResponse(request.DestinationAccountNumber, ResponseMessage.AccountNumberNotFound);
+
 
 					var transactionType = _db.TransactionTypes.Where(x => x.Description == TransactionTypeDescription.Transfer).FirstOrDefault();
 					decimal transactionCharge = transactionType.Charge;
@@ -81,8 +75,7 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 					var transactionLog = new TransactionLog
 					{
 						TransactionTime = Universe.Now,
-						TransactionAmount = request.Amount,
-						
+						TransactionAmount = request.Amount,	
 						TransactionTypeId = transactionType.Id,
 						NewBalance = sourceAccount.CurrentAccountBalance,
 						SourceAccountNumber = sourceAccount.AccountNumber,
@@ -92,7 +85,8 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 
 					};
 					_db.Accounts.Update(sourceAccount);
-					bool IsCompleted = _db.SaveChanges() > 1;
+					bool IsCompleted = _db.SaveChanges() > 0;
+					
 					if (IsCompleted)
 					{
 						transactionLog.Status = TransStatus.Successful;
@@ -101,29 +95,25 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 						_db.Transactions.Add(transactionLog);
 						_db.SaveChanges();
 						transactionResponse.AccountBalance = sourceAccount.CurrentAccountBalance;
-						response.ResponseCode = ResponseCode.TransactionSuccess;
-						response.ResponseMessage = ResponseMessage.TransactionSuccessMessage;
-						response.Data = transactionResponse;
+			
+						return CoreResponse.GlobalResponse(transactionResponse, ResponseMessage.TransactionSuccessMessage,ResponseStatus.Success, ResponseCode.SuccesFullOperation);
 					}
 
 					transactionLog.Status = TransStatus.Failed;
 					transactionLog.StatusMessage = "Failed Transanction";
 					_db.Transactions.Add(transactionLog);
 					_db.SaveChanges();
-					transactionResponse.AccountBalance = sourceAccount.CurrentAccountBalance;
-					response.ResponseCode = ResponseCode.TransactionSuccess;
-					response.ResponseMessage = ResponseMessage.TransactionSuccessMessage;
-					response.Data = transactionResponse;
 
-					return response;
+					return CoreResponse.GlobalResponse(transactionResponse, ResponseMessage.TransactionFailureMessage, ResponseStatus.Failed, ResponseCode.FailedOperation);
+
 				}
 
 				catch (Exception exp)
 				{
-					_logger.LogError($"AN ERROR OCCOURED....{exp.Message}");
+					return CoreResponse.OnFailureResponse(transactionResponse, exp.Message);				
 				}
 
-				return response;
+			
 
 
 

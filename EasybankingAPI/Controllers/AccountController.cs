@@ -1,5 +1,7 @@
 ﻿using Application.Common;
 using Application.Core.CQRS.AccountCQRS.Command;
+using Application.Core.CQRS.EmployeeCQRS.Query;
+using Application.Core.CQRS.TRansactionCQRS.Querry;
 using Application.Core.DTOs.AccountDTOs;
 using Application.Core.HelperClass;
 using Application.Core.ViewModels.AccountViewModel;
@@ -32,32 +34,35 @@ namespace EasybankingAPI.Controllers
 			this.mapper = mapper;
 			this.logger = logger;
 		}
+		[HttpGet("[action]")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(201, Type = typeof(AccountIndexDTO))]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		[ProducesDefaultResponseType]
+		//[Authorize]
+		public async Task<IActionResult> GetAllAcounts(CancellationToken token)
+		{
+			var response = await _mediator.Send(new GetAllAcountQuery.Query());
+			return response.Status.Equals(Universe.SuccessStatus) ? Ok(response) : NotFound(response);
+
+		}
 
 
-		//[HttpGet("[action]")]
-		//[ProducesResponseType(204)]
-		//[ProducesResponseType(201, Type = typeof(List<AccountIndexDTO>))]
-		//[ProducesResponseType(StatusCodes.Status404NotFound)]
-		//[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		//[ProducesDefaultResponseType]
-		////[Authorize]
-		//public async Task<IActionResult> Index(CancellationToken token)
-		//{
-		//	var list = new List<AccountIndexDTO>();
-		//	try
-		//	{
-				
-		//		var request = await _mediator.Send(new GetAllTransactionType.Query());
-		//		return Ok(request);
-		//	}
-		
-		//	 catch (Exception ex) when (ex is TaskCanceledException || ex is OperationCanceledException)
-		//	{
-		//		return Ok(list);
-		//	}			
 
-		//}
+		[HttpGet("[action]")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(201, Type = typeof(IEnumerable<AccountIndexDTO>))]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		[ProducesDefaultResponseType]
+		//[Authorize]
+		public async Task<IActionResult> GetAccountByAccountNumber(string accountNumber, CancellationToken token)
+		{
+			var response = await _mediator.Send(new GetAccountByAcctNumberQuery.Query { AccoutNumber = accountNumber });
+			return response.Status.Equals(Universe.SuccessStatus) ? Ok(response) : NotFound(response);
 
+		}
 
 
 		[HttpPost("[action]")]
@@ -66,59 +71,45 @@ namespace EasybankingAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
-		public async Task<IActionResult> Create([FromBody] CreateAccountDTO request)
+		public async Task<IActionResult> CreateAccount([FromBody] CreateAccountDTO request)
 		{
 			if (ModelState.IsValid)
 			{
-				try
-				{
-					//var entity = mapper.Map<Account>(request);
-					var result = await _mediator.Send(new CreateAccountCommand.Command { Account = request });
+				var result = await _mediator.Send(new CreateAccountCommand.Command { Account = request });
+				return result.ResponseCode.Equals(200) ? Ok(result) : BadRequest(result);   
+			}
+			return BadRequest(ModelState);
+		}
 
-					return Ok(result);
-				}
-				catch(Exception exp)
-				{
-
-					//logger.LogError($"AN ERROR OCCOURED....{exp.Message}");
-
-					var response = new Response()
-					{
-						ResponseCode = ResponseCode.FailedOperation,
-						ResponseMessage = exp.Message,
-					};
-					return Ok(response);
-					
-				}
-			   
-			   
+		[HttpPatch("[action]")]
+		[ProducesResponseType(201, Type = typeof(UpdateAccountDTO))]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+		[ProducesDefaultResponseType]
+		public async Task<IActionResult> UpdateAccount([FromBody] UpdateAccountDTO request)
+		{
+			if (ModelState.IsValid)
+			{
+				var result = await _mediator.Send(new UpdateAccountCommand.Command { Account = request });
+				return result.ResponseCode.Equals(200) ? Ok(result) : BadRequest(result);
 			}
 			return BadRequest(ModelState);
 		}
 
 
-		[HttpPatch("[action]")]
+		[HttpDelete("[action]")]
 		[ProducesResponseType(204)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
 		//[Authorize]
-		public async Task<IActionResult> Delete(Guid id)
+		public async Task<IActionResult> DeleteAccount(Guid id)
 		{
-			//if (account == null || id != account.Id)
-			//    return BadRequest(ModelState);
 			if (ModelState.IsValid)
 			{
 
-				var request = _mediator.Send(new DeleteAccountCommand.Command { Id = id}); 
-
-				//var flight = _mapper.Map<Flight>(FlightDTO);
-				//var sucess = await _unitOfWork.flight.UpdateAsync(flight);
-				//if (!sucess)
-				//{
-				//    ModelState.AddModelError("", Universe.Error500);
-				//    return StatusCode(500, ModelState);
-				//}
+				var request = await _mediator.Send(new DeleteAccountCommand.Command { Id = id}); 
 				return Ok(request);
 			}
 			return BadRequest(ModelState);

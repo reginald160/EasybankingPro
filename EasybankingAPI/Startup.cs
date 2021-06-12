@@ -1,10 +1,12 @@
 using Application;
 using Application.Core.HelperClass;
 using Infrastructure;
+using Infrastructure.Persistence;
 using Infrastructure.Persistence.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,12 +34,20 @@ namespace EasybankingAPI
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+		
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasybankingAPI", Version = "v1" });
 			});
-			ApplicationContainer.ApplicationInjectionServices(services, Configuration);
+			
+			//services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+			//{
+			//	options.Stores.MaxLengthForKeys = 128;
+			//	options.SignIn.RequireConfirmedAccount = false;
+			//});
 			services.AddAutoMapper(typeof(Startup).Assembly);
+			ApplicationContainer.ApplicationInjectionServices(services, Configuration);
+
 
 
 		}
@@ -56,7 +66,11 @@ namespace EasybankingAPI
 
 			app.UseRouting();
 
-			app.UseAuthorization();
+			//app.UseSession();
+
+			//app.UseAuthentication();
+			//app.UseAuthorization();
+		
 
 			app.UseEndpoints(endpoints =>
 			{

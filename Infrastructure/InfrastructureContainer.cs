@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Infrastructure.Persistence;
 
 namespace Infrastructure
 {
@@ -24,12 +25,16 @@ namespace Infrastructure
 					   configuration.GetConnectionString("DefaultConnection"), x =>
 					   x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-			//services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-			//{
-			//	options.Stores.MaxLengthForKeys = 128;
-			//	options.SignIn.RequireConfirmedAccount = true;
-			//});
-			//services.AddTransient<IUserServices, UserServices>();
+			services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+			{
+				options.User.RequireUniqueEmail = false;
+				options.Stores.MaxLengthForKeys = 128;
+				options.SignIn.RequireConfirmedAccount = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequireDigit = false;
+			})
+			.AddEntityFrameworkStores<ApplicationDbContext>()
+			.AddDefaultTokenProviders();
 			return services;
 		}
 

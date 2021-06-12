@@ -38,7 +38,7 @@ namespace Application.Core.CQRS.EmployeeCQRS.Command
 				{
 					var record = _db.Employees.Where(x => x.Deleted.Equals(!Universe.ISDeleted) && x.Id.Equals(request.Id)).FirstOrDefault();
 					record.Deleted = true;
-					_db.BaseProfiles.Update(record);
+					_db.Employees.Update(record);
 					_db.SaveChanges();
 					response.ResponseCode = ResponseCode.SuccesFullOperation;
 					response.ResponseMessage = ResponseMessage.SuccesFullOperationMessage;

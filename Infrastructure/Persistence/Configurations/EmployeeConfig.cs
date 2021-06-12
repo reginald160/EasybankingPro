@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Employee> builder)
 		{
+			builder.ToTable("Employees");
 			builder.Property(e => e.Id);
 
 			builder.Property(e => e.FirstName)
