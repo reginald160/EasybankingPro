@@ -1,15 +1,18 @@
-﻿using Application.Core.CQRS.AccountCQRS.Command;
+﻿using Application.Common;
+using Application.Core.CQRS.AccountCQRS.Command;
 using Application.Core.CQRS.TRansactionCQRS.Command;
 using Application.Core.CQRS.TRansactionCQRS.Querry;
 using Application.Core.CQRS.TRansactionCQRS.Query;
 using Application.Core.DTOs.TransactionDTOs;
 using Application.Core.HelperClass;
 using Application.Core.ViewModels.AccountViewModel;
+using Application.Settings;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +28,14 @@ namespace EasybankingAPI.Controllers
 	{
 		private readonly IMediator _mediator;
 		private readonly IMapper _mapper;
+		private AccountSettings _settings;
+		private static string BankSettlementAccount;
 
-		public TransactionController(IMediator mediator, IMapper mapper)
+		public TransactionController(IMediator mediator, IMapper mapper, IOptions<AccountSettings> settings)
 		{
 			_mediator = mediator;
 			_mapper = mapper;
+			BankSettlementAccount = _settings.BankSettlementAccount;
 		}
 
 		/// <summary>
@@ -39,7 +45,7 @@ namespace EasybankingAPI.Controllers
 		[HttpGet("[action]")]
 		[ProducesResponseType(200, Type = typeof(ICollection<TransactionDTO>))]
 		[ProducesResponseType(400)]
-		public IActionResult TrnasactionByDate(DateTime dateFrom, DateTime dateTo)
+		public IActionResult GetTrnasactionByDate(DateTime dateFrom, DateTime dateTo)
 		{
 			var response = _mediator.Send(new FindTransactionByDateQuery.Query { 
 				TransactionFromDate = dateFrom, TransactionToDate = dateTo });
@@ -69,7 +75,7 @@ namespace EasybankingAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
-		public async Task<IActionResult> Create([FromBody] CreateAccountDTO request)
+		public async Task<IActionResult> AccountOpening([FromBody] CreateAccountDTO request)
 		{
 			if (ModelState.IsValid)
 			{
@@ -143,6 +149,8 @@ namespace EasybankingAPI.Controllers
 			}
 			return BadRequest(ModelState);
 		}
+
+		
 
 	}
 }

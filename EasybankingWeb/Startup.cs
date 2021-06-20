@@ -1,12 +1,16 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EasybankingWeb
@@ -23,6 +27,27 @@ namespace EasybankingWeb
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddAuthentication(options =>
+			{
+				options.DefaultScheme = "Cookie";
+				options.DefaultChallengeScheme = "oidc";
+			})
+				.AddCookie("Cookie")
+				.AddOpenIdConnect("oidc", config =>
+				{
+					config.ClientId = "client_Id";
+					config.ClientSecret = "client_secret";
+					config.SaveTokens = true;
+					//IdentityServer4 url
+					config.Authority = "https://localhost:44315/";
+					config.ResponseType = "code";
+					config.RequireHttpsMetadata = false;
+					config.SignInScheme = "Cookie";
+
+
+				});
+
+			services.AddHttpClient();
 			services.AddControllersWithViews();
 		}
 
@@ -45,7 +70,7 @@ namespace EasybankingWeb
 			app.UseRouting();
 
 			app.UseAuthorization();
-
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(

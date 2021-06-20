@@ -20,8 +20,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{F4DB611E-4359-40DE-B9EF-B12E95F8783C}"
 	ProjectSection(SolutionItems) = preProject
 		ApplicationLayerDocumentation.txt = ApplicationLayerDocumentation.txt
+		IdentityServer4.txt = IdentityServer4.txt
 		InfrastructureDocumentation.txt = InfrastructureDocumentation.txt
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyBankingIdentityServer4", "EasyBankingIdentityServer4\EasyBankingIdentityServer4.csproj", "{5AD787CD-EDDA-4A21-B4E4-3EC82E22DA90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +52,10 @@ Global
 		{D1C6CDDB-F4A1-4C7A-82E3-5BAE5CB3026D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1C6CDDB-F4A1-4C7A-82E3-5BAE5CB3026D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1C6CDDB-F4A1-4C7A-82E3-5BAE5CB3026D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AD787CD-EDDA-4A21-B4E4-3EC82E22DA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AD787CD-EDDA-4A21-B4E4-3EC82E22DA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AD787CD-EDDA-4A21-B4E4-3EC82E22DA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AD787CD-EDDA-4A21-B4E4-3EC82E22DA90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

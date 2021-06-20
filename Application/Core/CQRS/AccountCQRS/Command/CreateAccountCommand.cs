@@ -2,6 +2,7 @@
 using Application.Core.HelperClass;
 using Application.Core.Responses;
 using Application.Core.ViewModels.AccountViewModel;
+using Application.Identity;
 using Application.Identyity.UserServices;
 using AutoMapper;
 using Domain.Entities;
@@ -56,13 +57,13 @@ namespace Application.Core.CQRS.AccountCQRS.Command
                     {
                         UserName = request.Account.Email,
                         Email = request.Account.Email,
-                        //Descriminator = UserDescriminator.Customer
+                        Descriminator = UserDescriminator.Customer
                     };
-                    await _userServices.Creatidentityuser(user, "EasyBanking160@");
+                    var userResponse = await _userServices.CreateUserASync(user, "EasyBanking160@", UserRole.Customer);
+                    if (userResponse.Status == ResponseStatus.Failed)
+                        return CoreResponse.OnFailureResponse(userResponse, userResponse.ResponseMessage);
 
-                    _db.SaveChanges();
-                   
-                    
+                    _db.SaveChanges();   
                     accountResponse.AccountNumber = record.FullName;
                     accountResponse.AccountName = record.AccountNumber;
 
@@ -73,6 +74,8 @@ namespace Application.Core.CQRS.AccountCQRS.Command
                     return CoreResponse.OnFailureResponse(accountResponse, exp.Message);
 
                 }
+
+             
 
             }
 

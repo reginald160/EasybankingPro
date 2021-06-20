@@ -33,6 +33,9 @@ namespace Application.Core.HelperClass
 		public static string UserScetionSeed = "Username";
 		public static string SuccessStatus = "Success";
 		public static string FailedStatus = "Failed";
+		public const string CustomerRole = "Customer";
+		public const string EmployeeRole = "Employee";
+		public const string SuperAdminRole = "SuperAdmin";
 		public static string AdminPass
 		{
 			get

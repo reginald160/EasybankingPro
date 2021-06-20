@@ -1,7 +1,9 @@
 ﻿using Application.Core.CQRS.EmployeeCQRS.Command;
 using Application.Core.CQRS.EmployeeCQRS.Query;
 using Application.Core.DTOs.EmployeeDTO;
+using Application.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,7 +33,7 @@ namespace EasybankingAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
 		//[Authorize]
-		public async Task<IActionResult> Index(CancellationToken token)
+		public async Task<IActionResult> GetAllEmployee(CancellationToken token)
 		{
 			var request = await _mediator.Send(new GetAllEmployeeCommand.Query());
 			return Ok(request);
@@ -58,7 +60,8 @@ namespace EasybankingAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
-		public async Task<IActionResult> Create([FromBody] CreateEmployeeDTO request)
+		[Authorize(Roles = UserRole.SuperAdmin)]
+		public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeDTO request)
 		{
 			if (ModelState.IsValid)
 			{
@@ -76,7 +79,7 @@ namespace EasybankingAPI.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		[ProducesDefaultResponseType]
 		//[Authorize]
-		public async Task<IActionResult> Delete(Guid id, CancellationToken token)
+		public async Task<IActionResult> DeleteEmployee(Guid id, CancellationToken token)
 		{
 			var request = await _mediator.Send(new DeleteEmployeeCommand.Query { Id = id });
 			return Ok(request);

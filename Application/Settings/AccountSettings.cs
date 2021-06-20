@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Common
+namespace Application.Settings
 {
-	public class AppSettings
+	public class AccountSettings
 	{
-		public string BankSettlement { get; set; }
+		public string BankSettlementAccount { get; set; }
 	}
 }

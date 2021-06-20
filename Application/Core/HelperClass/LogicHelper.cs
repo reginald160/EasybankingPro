@@ -1,7 +1,10 @@
 ﻿using Domain.Entities;
 using Infrastructure.Persistence.DataAccess;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -117,6 +120,45 @@ namespace Application.Core.HelperClass
 			return result;
 		}
 
+		public static string StringEncoder(string value)
+		{
+			var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(value));
+			return code;
+		}
+		public static string StringDecoder(string value)
+		{
+			var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(value));
+			return code;
+		}
+		public static class FileUploader
+		{
+			public static string imageurl(IFormFile model)
+			{
+				var uploadDir = "images";
+				var fileName = Path.GetFileNameWithoutExtension(model.FileName);
+				var imageUrlpath = "/" + uploadDir + "/" + fileName;
+				return imageUrlpath;
+			}
+			public static string FileUpload(IFormFile model, string foldername, string webRootPath)
+			{
+				var uploadDir = foldername;
+				var fileName = Path.GetFileNameWithoutExtension(model.FileName);
+				var extension = Path.GetExtension(model.FileName);
+				fileName = DateTime.UtcNow.ToString("yymmssfff") + fileName + extension;
+				var path = Path.Combine(webRootPath, uploadDir, fileName);
+				using (var fileStream = new FileStream(path, FileMode.Create))
+				{
+					model.CopyToAsync(fileStream);
+
+				}
+				string imageUrl = "/" + uploadDir + "/" + fileName;
+
+				return imageUrl;
+			}
+		
+
+
+		}
 
 
 	}

@@ -14,6 +14,10 @@ using Application.Identyity.UserServices;
 using Application.Core.Behaviour;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
+using Application.Common;
+using Application.Settings;
+using Application.Core.Notification;
+using Twilio.Clients;
 
 namespace Application
 {
@@ -28,7 +32,15 @@ namespace Application
 			services.AddMediatR(typeof(ApplicationContainer));
 			services.AddMediatR(Assembly.GetExecutingAssembly());
 			services.AddScoped<IUserServices, UserServices>();
-
+			//Application settings Services
+			services.Configure<AccountSettings>(configuration.GetSection("AccountSettings"));
+			services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
+			services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+			services.Configure<SMSSettings>(configuration.GetSection("SMSSettings"));
+			services.AddTransient<IMessageNotification, MessageNotification>();
+			services.AddHttpClient<ITwilioRestClient, CustomTwilioClient>(client =>
+		client.DefaultRequestHeaders.Add("X-Custom-Header", "HttpClientFactory-Sample"));
+			//Infracture Layer Service Container
 			InfrastructureContainer.InfrastructureInjectionServices(services, configuration);
 
 			return services;

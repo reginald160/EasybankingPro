@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
-	public class ApplicationRole : IdentityRole
+	public static class ApplicationRole 
 	{
+	
 	}
 }

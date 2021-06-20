@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Core.DTOs.IdentityUserDTO;
+using Application.Core.Responses;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
@@ -16,7 +18,9 @@ namespace Application.Identyity.UserServices
 
 		 IEnumerable<ApplicationUser> GetAllUsers();
 
-		 Task<ApplicationUser> Creatidentityuser(ApplicationUser user, string password);
-       
-    }
+		Task<Response> CreateUserASync(ApplicationUser user, string password, string role);
+		Task<Response> LoginAsync(LoginDTO login);
+
+
+	}
 }

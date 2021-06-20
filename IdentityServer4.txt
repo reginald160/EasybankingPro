@@ -1,0 +1,2 @@
+
+.well-Known/openid-configuration

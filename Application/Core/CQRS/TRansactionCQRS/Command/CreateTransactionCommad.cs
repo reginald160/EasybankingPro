@@ -2,6 +2,7 @@
 using Application.Core.DTOs.TransactionDTOs;
 using Application.Core.HelperClass;
 using Application.Core.Responses;
+using Application.Settings;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Persistence.DataAccess;
@@ -31,16 +32,16 @@ namespace Application.Core.CQRS.TRansactionCQRS.Command
 			private readonly ApplicationDbContext _db;
 			private readonly IMapper _mapper;
 			private readonly ILogger<Handler> _logger;
-			private readonly AppSettings _appSettings;
+			private readonly AccountSettings _appSettings;
 			private static string _bankSettlement;
 
-			public Handler(ApplicationDbContext db, IMapper mapper, ILogger<Handler> logger, IOptions<AppSettings> appSettings)
+			public Handler(ApplicationDbContext db, IMapper mapper, ILogger<Handler> logger, IOptions<AccountSettings> appSettings)
 			{
 				_db = db;
 				_mapper = mapper;
 				_logger = logger;
 				_appSettings = appSettings.Value;
-				_bankSettlement = _appSettings.BankSettlement;
+				_bankSettlement = _appSettings.BankSettlementAccount;
 			}
 
 		

@@ -1,8 +1,11 @@
 using Application;
 using Application.Core.HelperClass;
+using EasybankingAPI.Helper;
+using IdentityServer4.AccessTokenValidation;
 using Infrastructure;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.DataAccess;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -13,10 +16,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EasybankingAPI
@@ -33,6 +38,21 @@ namespace EasybankingAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+
+
+
+			services.AddAuthentication("Bearer")
+			// Adding Jwt Bearer  
+			.AddJwtBearer("Bearer", options =>
+			{
+				options.SaveToken = true;
+				options.RequireHttpsMetadata = false;
+				//IdentityServer4b
+				options.Authority = "https://localhost:44315/";
+				options.Audience = "EasyBankingAPI";
+				
+			});
+			
 			services.AddControllers();
 		
 			services.AddSwaggerGen(c =>
@@ -40,11 +60,6 @@ namespace EasybankingAPI
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasybankingAPI", Version = "v1" });
 			});
 			
-			//services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-			//{
-			//	options.Stores.MaxLengthForKeys = 128;
-			//	options.SignIn.RequireConfirmedAccount = false;
-			//});
 			services.AddAutoMapper(typeof(Startup).Assembly);
 			ApplicationContainer.ApplicationInjectionServices(services, Configuration);
 
@@ -68,10 +83,10 @@ namespace EasybankingAPI
 
 			//app.UseSession();
 
-			//app.UseAuthentication();
-			//app.UseAuthorization();
-		
+			app.UseAuthentication();
+			app.UseAuthorization();
 
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();

@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure
 {
@@ -25,16 +27,30 @@ namespace Infrastructure
 					   configuration.GetConnectionString("DefaultConnection"), x =>
 					   x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-			services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+			services.AddDbContext<ApplicationDbContext>(options =>
+			{
+				options.UseInMemoryDatabase("Memory");
+			});
+
+			// Identity
+			services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 			{
 				options.User.RequireUniqueEmail = false;
 				options.Stores.MaxLengthForKeys = 128;
 				options.SignIn.RequireConfirmedAccount = false;
 				options.Password.RequireUppercase = false;
+				options.Password.RequireNonAlphanumeric = false;
 				options.Password.RequireDigit = false;
+			
+				//options.SignIn.RequireConfirmedEmail = true;
 			})
 			.AddEntityFrameworkStores<ApplicationDbContext>()
 			.AddDefaultTokenProviders();
+
+			//Authentificvation
+			
+
+
 			return services;
 		}
 
