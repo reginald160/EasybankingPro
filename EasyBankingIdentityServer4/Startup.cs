@@ -40,7 +40,7 @@ namespace EasyBankingIdentityServer4
 			services.ConfigureApplicationCookie(option =>
 			{
 				option.Cookie.Name = IdentConstants.CookieName;
-				option.LoginPath = IdentConstants.LoginPath;
+				//option.LoginPath = IdentConstants.LoginPath;
 			});
 
 			services.AddControllersWithViews();
@@ -52,7 +52,7 @@ namespace EasyBankingIdentityServer4
 				.AddInMemoryApiResources(Resources.GetApiResources())
 				.AddInMemoryIdentityResources(Resources.GetIdentityResources())
 				.AddInMemoryClients(Clients.GetClients())
-				 .AddTestUsers(Users.GetUsers())
+				 .AddTestUsers(TestUsers.Users)
 				.AddDeveloperSigningCredential();
 		
 			

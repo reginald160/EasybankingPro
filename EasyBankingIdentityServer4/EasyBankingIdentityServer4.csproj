@@ -5,6 +5,30 @@
     <UserSecretsId>aspnet-EasyBankingIdentityServer4-2A082028-EA91-4B2C-99A5-DD657766A002</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Quickstart\Views\Account\**" />
+    <Content Remove="Quickstart\Views\Account\**" />
+    <EmbeddedResource Remove="Quickstart\Views\Account\**" />
+    <None Remove="Quickstart\Views\Account\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Quickstart\Account\AccountController.cs" />
+    <Compile Remove="Quickstart\Account\AccountOptions.cs" />
+    <Compile Remove="Quickstart\Account\ExternalProvider.cs" />
+    <Compile Remove="Quickstart\Account\LoggedOutViewModel.cs" />
+    <Compile Remove="Quickstart\Account\LoginInputModel.cs" />
+    <Compile Remove="Quickstart\Account\LoginViewModel.cs" />
+    <Compile Remove="Quickstart\Account\LogoutInputModel.cs" />
+    <Compile Remove="Quickstart\Account\LogoutViewModel.cs" />
+    <Compile Remove="Quickstart\SecurityHeadersAttribute.cs" />
+    <Compile Remove="Quickstart\TestUsers.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Shared\_ValidationSummary.cshtml" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Compile Remove="Data\**" />
     <Content Remove="Data\**" />
@@ -29,7 +53,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Settings\" />
+    <None Include="Quickstart\Views\Consent\Index.cshtml" />
+    <None Include="Quickstart\Views\Device\Success.cshtml" />
+    <None Include="Quickstart\Views\Device\UserCodeCapture.cshtml" />
+    <None Include="Quickstart\Views\Device\UserCodeConfirmation.cshtml" />
+    <None Include="Quickstart\Views\Diagnostics\Index.cshtml" />
+    <None Include="Quickstart\Views\Grants\Index.cshtml" />
+    <None Include="Quickstart\Views\Home\Index.cshtml" />
+    <None Include="Quickstart\Views\Shared\Error.cshtml" />
+    <None Include="Quickstart\Views\Shared\Redirect.cshtml" />
+    <None Include="Quickstart\Views\Shared\_Layout.cshtml" />
+    <None Include="Quickstart\Views\Shared\_Nav.cshtml" />
+    <None Include="Quickstart\Views\Shared\_ScopeListItem.cshtml" />
+    <None Include="Quickstart\Views\Shared\_ValidationSummary.cshtml" />
+    <None Include="Quickstart\Views\_ViewImports.cshtml" />
+    <None Include="Quickstart\Views\_ViewStart.cshtml" />
+    <None Include="Views\Account\AccessDenied.cshtml" />
+    <None Include="Views\Account\LoggedOut.cshtml" />
+    <None Include="Views\Account\Login.cshtml" />
+    <None Include="Views\Account\Logout.cshtml" />
+    <None Include="Views\Shared\_ValidationSummary.cshtml" />
   </ItemGroup>
 
 </Project>

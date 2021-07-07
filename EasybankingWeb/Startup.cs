@@ -35,6 +35,7 @@ namespace EasybankingWeb
 				.AddCookie("Cookie")
 				.AddOpenIdConnect("oidc", config =>
 				{
+					//Configuration["OIDC:ClientId"];
 					config.ClientId = "client_Id";
 					config.ClientSecret = "client_secret";
 					config.SaveTokens = true;
