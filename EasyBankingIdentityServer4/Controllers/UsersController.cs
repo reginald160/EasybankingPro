@@ -39,16 +39,16 @@ namespace EasyBankingIdentityServer4.Controllers
 			};
 			return View(user);
 		}
-		[HttpPost]
-		public async Task<IActionResult> Login(LoginViewModel vm)
-		{
-			var result = await _signInManager.PasswordSignInAsync(vm.UserName, vm.Password, false, false);
-			if (!result.Succeeded)
-				return Redirect(vm.ReturnUrl);
+		//[HttpPost]
+		//public async Task<IActionResult> Login(LoginViewModel vm)
+		//{
+		//	var result = await _signInManager.PasswordSignInAsync(vm.UserName, vm.Password, false, false);
+		//	if (!result.Succeeded)
+		//		return Redirect(vm.ReturnUrl);
 
-			return View();
+		//	return View();
 
-		}
+		//}
 
 	}
 }

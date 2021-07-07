@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure
-{
+{	
 	public static  class InfrastructureContainer
 	{
 		
