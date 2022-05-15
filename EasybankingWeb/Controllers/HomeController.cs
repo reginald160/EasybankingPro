@@ -11,10 +11,13 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Options;
 using EasybankingWeb.Settings;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace EasybankingWeb.Controllers
 {
-	public class HomeController : Controller
+	public class HomeController : BaseController
 	{
 		private readonly ILogger<HomeController> _logger;
 		private readonly HttpClient _client;
@@ -27,11 +30,34 @@ namespace EasybankingWeb.Controllers
 			_settings = settings;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
+			//var accessToken = await HttpContext.GetTokenAsync("access_token");
+			//var client = new HttpClient();
+			//client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+			//var content = await client.GetStringAsync("https://localhost:6001/identity");
+			//ViewBag.Json = JArray.Parse(content).ToString();
+
+			var accessToken = await HttpContext.GetTokenAsync("access_token");
+			var idToken = await HttpContext.GetTokenAsync("id_token");
+			var refreshToken = await HttpContext.GetTokenAsync("refresh");
+			if(accessToken != null)
+			{
+				var _acesstoken = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+				var _idtoken = new JwtSecurityTokenHandler().ReadJwtToken(idToken);
+
+
+			}
+
+			this.ShowSuccessMessage("Hello");
 			return View();
 		}
 
+		[Route("signin-oidc")]
+		public IActionResult Oidc()
+		{
+			return RedirectToAction("Index", "Home");
+		}
 		public IActionResult Privacy()
 		{
 			return View();
@@ -48,7 +74,13 @@ namespace EasybankingWeb.Controllers
 			var serverHeader = await _client.GetAsync(_settings.Value.ValidIssuer + $"/Index");
 			var accessToken = await HttpContext.GetTokenAsync(_settings.Value.Token);
 			_client.DefaultRequestHeaders.Add("Authorization", $"Bearer{accessToken}");
-			return View();
+
+
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+			var content = await client.GetStringAsync("https://localhost:6001/identity");
+			ViewBag.Json = JArray.Parse(content).ToString();
+			return View("json");
 		}
 
 

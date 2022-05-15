@@ -22,6 +22,8 @@ namespace Infrastructure.Persistence.Configurations
 			builder.Property(s => s.Deleted)
 				.HasDefaultValue(false);
 			builder.Property(s => s.Charge);
+			builder.Property(p => p.RowVersion).IsConcurrencyToken();
+
 
 			builder.HasData(
 

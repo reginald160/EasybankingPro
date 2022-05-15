@@ -6,9 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\**" />
     <Compile Remove="Quickstart\Views\Account\**" />
+    <Content Remove="Data\Migrations\**" />
     <Content Remove="Quickstart\Views\Account\**" />
+    <EmbeddedResource Remove="Data\Migrations\**" />
     <EmbeddedResource Remove="Quickstart\Views\Account\**" />
+    <None Remove="Data\Migrations\**" />
     <None Remove="Quickstart\Views\Account\**" />
   </ItemGroup>
 

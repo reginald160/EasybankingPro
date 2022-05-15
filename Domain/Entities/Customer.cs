@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static Domain.Enums;
 
@@ -17,12 +18,11 @@ namespace Domain.Entities
 		[ForeignKey("EmployeeId")]
 		public virtual Employee AccountOfficer { get; set; }
 
-		public string BrokerCode { get; set; }
-
-		//public Guid? Accountd { get; set; }
-		//[ForeignKey("Accountd")]
-
-		//public virtual Account Account { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<Account> BankAccounts { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<Card> Cards { get; set; }
+		
 
 
 

@@ -18,6 +18,8 @@ using Application.Common;
 using Application.Settings;
 using Application.Core.Notification;
 using Twilio.Clients;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Application
 {
@@ -32,6 +34,7 @@ namespace Application
 			services.AddMediatR(typeof(ApplicationContainer));
 			services.AddMediatR(Assembly.GetExecutingAssembly());
 			services.AddScoped<IUserServices, UserServices>();
+			services.AddSignalR();
 			//Application settings Services
 			services.Configure<AccountSettings>(configuration.GetSection("AccountSettings"));
 			services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
@@ -39,11 +42,16 @@ namespace Application
 			services.Configure<SMSSettings>(configuration.GetSection("SMSSettings"));
 			services.AddTransient<IMessageNotification, MessageNotification>();
 			services.AddHttpClient<ITwilioRestClient, CustomTwilioClient>(client =>
-		client.DefaultRequestHeaders.Add("X-Custom-Header", "HttpClientFactory-Sample"));
+			client.DefaultRequestHeaders.Add("X-Custom-Header", "HttpClientFactory-Sample"));
 			//Infracture Layer Service Container
 			InfrastructureContainer.InfrastructureInjectionServices(services, configuration);
 
 			return services;
+		}
+
+		public  static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		{
+			
 		}
 	}
 }

@@ -14,6 +14,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Infrastructure.Persistence.Configurations;
+using Domain.Entities.ChatModels;
 
 namespace Infrastructure.Persistence.DataAccess
 {
@@ -26,11 +27,40 @@ namespace Infrastructure.Persistence.DataAccess
 		}
 
 	  
-		protected override void OnModelCreating(ModelBuilder builder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			builder.ApplyConfiguration(new TransactionTypeConfig());
-			builder.ApplyConfiguration(new DesignitionConfig());
-			builder.ApplyConfiguration(new AccountTypeConfig());
+			modelBuilder.ApplyConfiguration(new TransactionTypeConfig());
+			modelBuilder.ApplyConfiguration(new DesignitionConfig());
+			modelBuilder.ApplyConfiguration(new AccountTypeConfig());
+			modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+			{
+				b.Property<string>("LoginProvider")
+					.HasColumnType("nvarchar(128)")
+					.HasMaxLength(128);
+
+				b.Property<string>("ProviderKey")
+					.HasColumnType("nvarchar(128)")
+					.HasMaxLength(128);
+
+				b.Property<string>("ProviderDisplayName")
+					.HasColumnType("nvarchar(max)");
+
+				b.Property<string>("UserId")
+					.IsRequired()
+					.HasColumnType("nvarchar(450)");
+
+				b.HasKey("LoginProvider", "ProviderKey");
+
+				b.HasIndex("UserId");
+
+				b.ToTable("AspNetUserLogins");
+			});
+			//modelBuilder.Ignore<IdentityUserLogin<string>>();
+			//modelBuilder.Ignore<IdentityUserRole<string>>();
+			//modelBuilder.Ignore<IdentityUserClaim<string>>();
+			//modelBuilder.Ignore<IdentityUserToken<string>>();
+			//modelBuilder.Ignore<IdentityUser<string>>();
+			//modelBuilder.Ignore<ApplicationUser>();
 			#region
 			//var typesToRegister = Assembly.Load("BillsPmtOrchestrator.Repository").GetTypes().
 			// Where(type => !string.IsNullOrEmpty(type.Namespace)).
@@ -44,7 +74,7 @@ namespace Infrastructure.Persistence.DataAccess
 			//}
 			#endregion
 
-			base.OnModelCreating(builder);     
+			base.OnModelCreating(modelBuilder);     
 		}
 
 		//public DbSet<BaseProfile> BaseProfiles { get; set; }
@@ -57,6 +87,8 @@ namespace Infrastructure.Persistence.DataAccess
 		public DbSet<Designition> Designitions { get; set; }
 		public DbSet<NumberSequence> NumberSequences { get; set; }
 		public DbSet<UserSecurityQuestion> UserSecurityQuestions { get; set; }
+		public DbSet<Message> Messages { get; set; }
+		public DbSet<Chat> Chats { get; set; }
 
 		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
 		{

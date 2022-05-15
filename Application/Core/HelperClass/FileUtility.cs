@@ -31,13 +31,18 @@ namespace Application.Core.HelperClass
 			File.Move(filePath, newFilePath);
 		}
 	
-		public static string Upload(IFormFile model, string foldername, string webRootPath)
+		public static string Upload(IFormFile model, string foldername, string directoryName)
 		{
+			if (!Directory.Exists(directoryName))
+				Directory.CreateDirectory(directoryName);
+
 			var uploadDir = foldername;
 			var fileName = Path.GetFileNameWithoutExtension(model.FileName);
 			var extension = Path.GetExtension(model.FileName);
 			fileName = DateTime.UtcNow.ToString("yymmssfff") + fileName + extension;
+			var webRootPath = Path.GetDirectoryName(directoryName);
 			var path = Path.Combine(webRootPath, uploadDir, fileName);
+
 			using (var fileStream = new FileStream(path, FileMode.Create))
 			{
 				model.CopyToAsync(fileStream);

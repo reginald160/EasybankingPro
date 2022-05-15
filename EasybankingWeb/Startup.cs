@@ -40,13 +40,28 @@ namespace EasybankingWeb
 					config.ClientSecret = "client_secret";
 					config.SaveTokens = true;
 					//IdentityServer4 url
-					config.Authority = "https://localhost:44315/";
+					config.Authority = "https://localhost:44327/";
 					config.ResponseType = "code";
 					config.RequireHttpsMetadata = false;
 					config.SignInScheme = "Cookie";
 
 
 				});
+
+			//.AddOpenIdConnect("oidc", config =>
+			// {
+			//	 //Configuration["OIDC:ClientId"];
+			//	 config.ClientId = "client_Id";
+			//	 config.ClientSecret = "client_secret";
+			//	 config.SaveTokens = true;
+			//	 //IdentityServer4 url
+			//	 config.Authority = "https://localhost:44315/";
+			//	 config.ResponseType = "code";
+			//	 config.RequireHttpsMetadata = false;
+			//	 config.SignInScheme = "Cookie";
+
+
+			// });
 
 			services.AddHttpClient();
 			services.AddControllersWithViews();

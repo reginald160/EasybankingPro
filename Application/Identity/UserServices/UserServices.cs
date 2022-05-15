@@ -38,7 +38,6 @@ namespace Application.Identyity.UserServices
 			_JWT = jWT;
 		}
 
-
 		public async Task<Response> CreateUserASync(ApplicationUser user, string password, string role)
 		{
 			var userExists = await _userManager.FindByNameAsync(user.UserName);

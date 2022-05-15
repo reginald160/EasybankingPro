@@ -14,14 +14,17 @@ namespace Domain.Entities
 		public Account()
 		{
 			Transactions = new HashSet<TransactionLog>();
-
+			Cards = new HashSet<Card>();
 		}
 		public string AccountNumber { get; set; }
 		public Guid? EmployeeId { get; set; }
 
 		[ForeignKey("EmployeeId")]
 		public virtual Employee AccountOfficer { get; set; }
+		public Guid? CustomerId { get; set; }
 
+		[ForeignKey("CustomerId")]
+		public virtual Customer Customer { get; set; }
 		public string BrokerCode { get; set; }
 		public  decimal CurrentAccountBalance { get; set; }
 		public Guid? AccountTypeId { get; set; }
@@ -30,7 +33,12 @@ namespace Domain.Entities
 		public string UserName { get; set; }
 		public byte[] PINHash { get; set; }
 		public byte [] PINSalt { get; set; }
-		public ICollection<TransactionLog> Transactions { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<TransactionLog> Transactions { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<Card> Cards { get; set; }
+
 		
+
 	}
 }

@@ -19,6 +19,8 @@ namespace Application.Core.Notification
     public interface IMessageNotification
     {
         Response SendEmail(string email, string subject, string messageBody);
+        //Response SendEmailAsync(string receiver, string subject, string htmlMessage);
+        //Response SendEmailAsync(string sender, string receiver, string subject, string htmlMessage);
         Response SendSMS(string phoneNumber, string messageBody);
 
     }
@@ -27,16 +29,18 @@ namespace Application.Core.Notification
     {
         private readonly IOptions<EmailSettings> _emailSettings;
         private readonly IOptions<SMSSettings> _smsSettings;
+        private readonly IOptions<SendGridSetting>  _sendgridSettings;
         private readonly ITwilioRestClient _client;
 
-        public MessageNotification(IOptions<EmailSettings> emailSettings, IOptions<SMSSettings> smsSettings = null, ITwilioRestClient client = null)
-        {
-            _emailSettings = emailSettings;
-            _smsSettings = smsSettings;
-            _client = client;
-        }
+		public MessageNotification(IOptions<EmailSettings> emailSettings, IOptions<SMSSettings> smsSettings = null, ITwilioRestClient client = null, IOptions<SendGridSetting> sendgridSettings = null)
+		{
+			this._emailSettings = emailSettings;
+			this._smsSettings = smsSettings;
+			this._client = client;
+			this._sendgridSettings = sendgridSettings;
+		}
 
-        public Response SendEmail(string email, string subject, string messageBody)
+		public Response SendEmail(string email, string subject, string messageBody)
         {
 
             MailMessage msg = new MailMessage
@@ -97,6 +101,33 @@ namespace Application.Core.Notification
            
 
         }
+
+        //public async Response SendEmailAsync(string receiver, string subject, string htmlMessage)
+        //{
+        //     var status = await this.SendEmailAsync(Universe.AdminEmail, receiver, subject, htmlMessage);
+        //}
+          
+
+        //public async Task<bool> SendEmailAsync(string sender, string receiver, string subject, string htmlMessage)
+        //{
+        //    var client = new SendGridClient(this._sendgridSettings.Value.ApiKey);
+        //    var from = new EmailAddress(sender);
+        //    var to = new EmailAddress(receiver, receiver);
+        //    var msg = MailHelper.CreateSingleEmail(from, to, subject, htmlMessage, htmlMessage);
+
+        //    try
+        //    {
+        //        var isSuccessful = await client.SendEmailAsync(msg);
+
+        //        return isSuccessful.StatusCode == HttpStatusCode.Accepted;
+        //    }
+        //    catch
+        //    {
+        //        // Ignored
+        //        return false;
+        //    }
+        //}
+
     }
 
 }

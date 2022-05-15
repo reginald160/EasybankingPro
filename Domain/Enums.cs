@@ -9,6 +9,13 @@ namespace Domain
 {
 	public class Enums
 	{
+        public enum ChatType
+        {
+            CustomerToUser,
+            UserToUser,
+            Group,
+            Private
+        }
 		public enum Gender
 		{
 			Male, Female

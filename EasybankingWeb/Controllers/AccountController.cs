@@ -1,17 +1,22 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EasybankingWeb.Controllers
 {
-	public class AccountController : Controller
+	[Authorize]
+	public class AccountController : BaseController
 	{
-		[Authorize]
-		public IActionResult AccountOpening()
+		
+		public  async Task<IActionResult> AccountOpening()
 		{
+
+
 			return View();
 		}
 	}

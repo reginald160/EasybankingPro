@@ -43,37 +43,61 @@ namespace Application.Core.CQRS.EmployeeCQRS.Command
 
 			public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
 			{
-				
+			
 				var employeeeResponse = new EmployeeResponse();
 
-				try
-				{					
-					var employee = _mapper.Map<Employee>(request.Employee);
-					employee.StaffCode = LogicHelper.GetStaffCode(_context, "Emp");
-					await  _context.Employees.AddAsync(employee);
-					var user = new ApplicationUser
+				if(request.Employee.Id.Equals(Guid.Empty))
+                {
+					try
 					{
-						UserName = employee.StaffCode,
-						Email = employee.Email,
-						SecurityStamp = Guid.NewGuid().ToString(),
-						Descriminator = UserDescriminator.Employee
-					};
-					 var userResponse =	await _userServices.CreateUserASync(user, employee.StaffCode, UserRole.Customer);
-					if(userResponse.Status == ResponseStatus.Failed)
-						return CoreResponse.OnFailureResponse(userResponse, userResponse.ResponseMessage);
+						var employee = _mapper.Map<Employee>(request.Employee);
+						employee.StaffCode = LogicHelper.GetStaffCode(_context, "Emp");
+						await _context.Employees.AddAsync(employee);
+						var user = new ApplicationUser
+						{
+							UserName = employee.StaffCode,
+							Email = employee.Email,
+							SecurityStamp = Guid.NewGuid().ToString(),
+							Descriminator = UserDescriminator.Employee
+						};
+						var userResponse = await _userServices.CreateUserASync(user, employee.StaffCode, UserRole.Customer);
+						if (userResponse.Status == ResponseStatus.Failed)
+							return CoreResponse.OnFailureResponse(userResponse, userResponse.ResponseMessage);
 
-					_context.SaveChanges();
-					employeeeResponse.Name = employee.FullName;
-					employeeeResponse.StaffCode = employee.StaffCode;
+						_context.SaveChanges();
+						employeeeResponse.Name = employee.FullName;
+						employeeeResponse.StaffCode = employee.StaffCode;
 
-					return CoreResponse.OnSaveResponse(employeeeResponse);
+						return CoreResponse.OnSaveResponse(employeeeResponse);
 
+					}
+					catch (Exception exp)
+					{
+
+						return CoreResponse.OnFailureResponse(employeeeResponse, exp.Message);
+					}
 				}
-				catch(Exception exp)
-				{
+                else
+                {
+                    try
+					{
+						var employee = _mapper.Map<Employee>(request.Employee);
+						var entity = _context.Employees.Find(employee.Id);
+						var iSConcurrency = employee.RowVersion != entity.RowVersion;
+						if (iSConcurrency)
+                        {
 
-					return CoreResponse.OnFailureResponse(employeeeResponse, exp.Message);
+							return CoreResponse.GlobalResponse(employeeeResponse,"Another user has updated this record", "Failed", 404);
+						}
+						return CoreResponse.OnUpdateResponse(employeeeResponse);
+					}
+					catch (Exception exp)
+					{
+
+						return CoreResponse.OnFailureResponse(employeeeResponse, exp.Message);
+					}
 				}
+				
 				
 			}
 		}

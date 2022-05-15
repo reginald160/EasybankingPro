@@ -13,7 +13,7 @@ using static Domain.Enums;
 namespace Infrastructure.Persistence
 {
 
-    public class ApplicationUser : IdentityUser/*, IEntity<string>*/
+    public partial class ApplicationUser : IdentityUser/*, IEntity<string>*/
     {
         // Other properties
 

@@ -1,4 +1,5 @@
 using Application;
+using Application.Core.Exceptions;
 using Application.Core.HelperClass;
 using EasybankingAPI.Helper;
 using IdentityServer4.AccessTokenValidation;
@@ -23,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Application.Core.Exceptions.CoreExeptions;
 
 namespace EasybankingAPI
 {
@@ -48,7 +50,7 @@ namespace EasybankingAPI
 				options.SaveToken = true;
 				options.RequireHttpsMetadata = false;
 				//IdentityServer4b
-				options.Authority = "https://localhost:44315/";
+				options.Authority = "https://localhost:5000/";
 				options.Audience = "EasyBankingAPI";
 				
 			});
@@ -86,7 +88,8 @@ namespace EasybankingAPI
 			app.UseAuthentication();
 			app.UseAuthorization();
 
-			
+
+			app.UseMiddleware<AdminErrorHandler>();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();

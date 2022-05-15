@@ -21,7 +21,11 @@ namespace Application.Core.ViewModels.AccountViewModel
 		public string BrokerCode { get; set; }
 		public Guid? AccountTypeId { get; set; }
 		public string UserName { get; set; }
-		
 
+		//public void ConfigureMapping(Profile mapper)
+		//{
+		//	mapper.CreateMap<MoneyTransferCreateServiceModel, MoneyTransfer>()
+		//		.ForMember(dest => dest.Destination, opt => opt.MapFrom(src => src.DestinationBankAccountUniqueId));
+		//}
 	}
 }

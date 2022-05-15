@@ -24,6 +24,7 @@ namespace Infrastructure.Persistence.Configurations
 			.IsRequired();
 			builder.Property(e => e.MiddleName)
 			.HasMaxLength(100);
+			builder.Property(p => p.RowVersion).IsConcurrencyToken();
 		}
 	}
 }
